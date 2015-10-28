@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+   
+    <xs:simpleType name="CardSuit" final="restriction">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="SPADES"/>
+            <xs:enumeration value="HEARTS"/>
+            <xs:enumeration value="DIAMONDS"/>
+            <xs:enumeration value="CLUBS"/>
+        </xs:restriction>
+    </xs:simpleType>  
+
+    <xs:simpleType name="CardRank" final="restriction">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="TWO"/>
+            <xs:enumeration value="THREE"/>
+            <xs:enumeration value="FOUR"/>
+            <xs:enumeration value="FIVE"/>
+            <xs:enumeration value="SIX"/>
+            <xs:enumeration value="SEVEN"/>
+            <xs:enumeration value="EIGHT"/>
+            <xs:enumeration value="NINE"/>
+            <xs:enumeration value="TEN"/>
+            <xs:enumeration value="JACK"/>
+            <xs:enumeration value="QUEEN"/>
+            <xs:enumeration value="KING"/>
+            <xs:enumeration value="ACE"/>
+        </xs:restriction>
+    </xs:simpleType>              
+    
+    <xs:complexType name="SimpleCard">
+        <xs:sequence>
+            <xs:element name="suit" type="CardSuit"/>
+            <xs:element name="rank" type="CardRank"/>
+        </xs:sequence>
+    </xs:complexType>  
+    
+    <xs:complexType name="EntityUser">
+        <xs:sequence>
+            <xs:element name="id" type="xs:long"/>
+            <xs:element name="login" type="xs:string"/>
+            <xs:element name="password" type="xs:string"/>
+            <xs:element name="balance" type="xs:decimal"/>
+        </xs:sequence>
+    </xs:complexType>  
+ 
+    <xs:simpleType name="PlayerStatus" final="restriction" >
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="READY_TO_START"/>
+            <xs:enumeration value="STAND"/>
+            <xs:enumeration value="READY_TO_FINISH"/>
+        </xs:restriction>
+    </xs:simpleType>   
+
+    <xs:element name="EntityPlayerStatus">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="statusType" type="PlayerStatus" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:simpleType name="PlayerHandStatus" final="restriction" >
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="NO_CARDS"/>
+            <xs:enumeration value="CAN_TAKE_CARD"/>
+            <xs:enumeration value="CAN_NOT_TAKE_CARD"/>
+            <xs:enumeration value="BUSTED"/>
+        </xs:restriction>
+    </xs:simpleType>   
+
+    <xs:element name="EntityPlayerHandStatus">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="statusType" type="PlayerHandStatus" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:simpleType name="EnumGameState" final="restriction">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="WAITING_BETS"/>
+            <xs:enumeration value="GAME_IN_PROCESS"/>
+            <xs:enumeration value="GAME_FINISHED"/>
+        </xs:restriction>
+    </xs:simpleType>   
+
+    <xs:element name="EntityGameState">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="state" type="EnumGameState"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+
+</xs:schema>

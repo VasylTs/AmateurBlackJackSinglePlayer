@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="system">
+    <system systemId="file:/D:/Projects/AmateurBlackJack%20-%20копия/imp/entity.xsd" uri="src/conf/xml-resources/jaxb/StandartTypes/entity.xsd"/>
+    <system systemId="file:/D:/Projects/AmateurBlackJackCopy/imp/entity.xsd" uri="src/conf/xml-resources/jaxb/StandartTypes/entity.xsd"/>
+</catalog>
