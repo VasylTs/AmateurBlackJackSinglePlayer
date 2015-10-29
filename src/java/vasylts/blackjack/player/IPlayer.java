@@ -6,7 +6,7 @@
 package vasylts.blackjack.player;
 
 import vasylts.blackjack.player.hand.IHand;
-import vasylts.blackjack.player.wallet.IWallet;
+import vasylts.blackjack.user.wallet.IWallet;
 
 /**
  *

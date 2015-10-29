@@ -17,11 +17,14 @@ import vasylts.blackjack.deck.card.ICard;
 import vasylts.blackjack.player.IPlayer;
 import vasylts.blackjack.player.NoSuchPlayerException;
 import vasylts.blackjack.player.SimplePlayer;
-import vasylts.blackjack.player.wallet.IWallet;
+import vasylts.blackjack.user.wallet.IWallet;
 import vasylts.blackjack.user.IUser;
 
 /**
- *
+ * This class I were creating for supporting a multiplayer game, but then I
+ * decided not to bother and made a single player game, so part of methods is
+ * useless in this realization of blackjack
+ * <p>
  * @author VasylcTS
  */
 public class GamePlayerManager {
@@ -170,12 +173,13 @@ public class GamePlayerManager {
 
     /**
      * Checks if player can take more cards
-     *
+     * <p>
      * @param playerId Player`s id in game
+     * <p>
      * @return
      */
     public boolean isPlayerCanTakeCard(long playerId) {
-        return getPlayerBet(playerId) > 0 && !isPlayerBusted(playerId);
+        return getPlayerBet(playerId) > 0 && !isPlayerStand(playerId) && !isPlayerBusted(playerId);
     }
 
     /**
@@ -194,6 +198,9 @@ public class GamePlayerManager {
         boolean isOk = false;
         if (player.getUserId().equals(userId)) {
             if (bet > 0 && isEnoughMoneyInWallet(player.getWallet(), bet)) {
+                if (player.getBet() > 0) {
+                    returnBetToPlayer(player);
+                }
                 player.getWallet().withdrawMoney(bet);
                 player.setBet(bet);
                 isOk = true;
@@ -215,6 +222,9 @@ public class GamePlayerManager {
      */
     public boolean placeBetUnauthorized(long playerId, Double bet) {
         IPlayer player = getPlayer(playerId);
+        if (player.getBet() > 0) {
+            returnBetToPlayer(player);
+        }
         if (bet > 0 && isEnoughMoneyInWallet(player.getWallet(), bet)) {
             player.getWallet().withdrawMoney(bet);
             player.setBet(bet);
@@ -275,12 +285,27 @@ public class GamePlayerManager {
     }
 
     /**
+     * Check if user is used action "STAND" Blackjack wiki: Stand: Take no more
+     * cards, also known as "stand pat", "stick", or "stay".
+     * <p>
+     * @param playerId Player`s id in game
+     * <p>
+     * @return {@code true} if user used action "STAND", {@code false} otherwise
+     */
+    public boolean isPlayerStand(long playerId) {
+        return getPlayer(playerId).getHand().isStand();
+    }
+
+    /**
      * Get player
-     *
+     * <p>
      * @param playerId Player`s id
+     * <p>
      * @return player
      */
-    /*default-package*/ IPlayer getPlayer(Long playerId) {
+    /*
+     * default-package
+     */ IPlayer getPlayer(Long playerId) {
         IPlayer player = players.get(playerId);
         if (player == null) {
             throw new NoSuchPlayerException("There is no player with ID: " + playerId + " in this game! ");
@@ -291,16 +316,18 @@ public class GamePlayerManager {
 
     /**
      * Get collection of players.
-     *
+     * <p>
      * @return collection of players
      */
-    /*default-package*/ Collection<IPlayer> getPlayers() {
+    /*
+     * default-package
+     */ Collection<IPlayer> getPlayers() {
         return players.values();
     }
 
     /**
      * Generate unique id for player
-     *
+     * <p>
      * @return id
      */
     private Long getNewId() {
@@ -316,10 +343,19 @@ public class GamePlayerManager {
      *
      * @param wallet player`s wallet
      * @param money amount of money we want to withdraw
+     * <p>
      * @return {@code true} if there are enough money in wallet, {@code false}
      * otherwise
      */
     private boolean isEnoughMoneyInWallet(IWallet wallet, double money) {
         return wallet.getBalance() >= money;
+    }
+
+    private void returnBetToPlayer(IPlayer player) {
+        double bet = player.getBet();
+        if (bet > 0) {
+            player.getWallet().addFunds(bet);
+            player.setBet(0);
+        }
     }
 }

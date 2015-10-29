@@ -44,7 +44,7 @@ public class RestHand {
         try {
             return Response.ok("This is test method").build();
         } catch (Exception e) {
-            throw new BlackjackServerException(e.getMessage());
+            throw new BlackjackServerException(e.toString());
         }
     }
 
@@ -68,7 +68,7 @@ public class RestHand {
                 return Response.ok(game.getPlayerScore(playerId)).build();
             }
         } catch (Exception e) {
-            throw new BlackjackServerException(e.getMessage());
+            throw new BlackjackServerException(e.toString());
         }
     }
 
@@ -93,7 +93,7 @@ public class RestHand {
                 return Response.ok(new Gson().toJson(game.getPlayerCards(playerId))).build();
             }
         } catch (Exception e) {
-            throw new BlackjackServerException(e.getMessage());
+            throw new BlackjackServerException(e.toString());
         }
     }
 
@@ -117,7 +117,7 @@ public class RestHand {
                 return Response.ok(game.getPlayerBet(playerId)).build();
             }
         } catch (Exception e) {
-            throw new BlackjackServerException(e.getMessage());
+            throw new BlackjackServerException(e.toString());
         }
     }
 
@@ -141,7 +141,7 @@ public class RestHand {
                 return Response.ok(game.placeBet(0, playerId, bet)).build();
             }
         } catch (Exception e) {
-            throw new BlackjackServerException(e.getMessage());
+            throw new BlackjackServerException(e.toString());
         }
     }
 
@@ -167,7 +167,7 @@ public class RestHand {
                 return Response.ok(resp).build();
             }
         } catch (Exception e) {
-            throw new BlackjackServerException(e.getMessage());
+            throw new BlackjackServerException(e.toString());
         }
     }
 
@@ -203,7 +203,7 @@ public class RestHand {
 //                return Response.ok().build();
 //            }
 //        } catch (Exception e) {
-//            throw new BlackjackServerException(e.getMessage());
+//            throw new BlackjackServerException(e.toString());
 //        }
 //    }
     /**
@@ -227,7 +227,7 @@ public class RestHand {
             }
             return Response.ok().build();
         } catch (Exception e) {
-            throw new BlackjackServerException(e.getMessage());
+            throw new BlackjackServerException(e.toString());
         }
     }
 
@@ -253,7 +253,7 @@ public class RestHand {
             }
             return Response.ok().build();
         } catch (Exception e) {
-            throw new BlackjackServerException(e.getMessage());
+            throw new BlackjackServerException(e.toString());
         }
     }
 
@@ -279,7 +279,7 @@ public class RestHand {
             }
             return Response.ok().build();
         } catch (Exception e) {
-            throw new BlackjackServerException(e.getMessage());
+            throw new BlackjackServerException(e.toString());
         }
     }
 
@@ -315,7 +315,7 @@ public class RestHand {
                 return Response.ok(resp).build();
             }
         } catch (Exception e) {
-            throw new BlackjackServerException(e.getMessage());
+            throw new BlackjackServerException(e.toString());
         }
     }
 

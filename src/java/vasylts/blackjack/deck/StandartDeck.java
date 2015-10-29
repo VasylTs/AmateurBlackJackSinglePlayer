@@ -6,6 +6,7 @@
 package vasylts.blackjack.deck;
 
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import vasylts.blackjack.deck.card.ICard;
@@ -16,26 +17,35 @@ import vasylts.blackjack.deck.card.ICard;
  */
 public class StandartDeck implements IDeck {
     final private List<ICard> cards;
-    private int index = 0;
+    private Iterator<ICard> cardIterator;
     
     public StandartDeck()
     {
         cards = DeckBuilder.buildStandartDeck().getCards();
+        cardIterator = cards.iterator();
     }
+    
     
     public StandartDeck(List<ICard> cardDeck) {
         if (cardDeck == null) {
             throw new NullPointerException("Card deck can not be null");
         }
         cards = cardDeck;
+        cardIterator = cards.iterator();
     }
     
+    /**
+     * Get next card from deck
+     * @return instance of {@link ICard}
+     * @throws NoCardInDeckException if there is no more cards in deck
+     */
     @Override
     public ICard getNextCard() {
-        if (index > cards.size() - 1)
+        if (cardIterator.hasNext()) {
+            return cardIterator.next();
+        } else {
             throw new NoCardInDeckException();
-        else 
-            return cards.get(index++);
+        }            
     }
 
     @Override
@@ -55,7 +65,7 @@ public class StandartDeck implements IDeck {
 
     @Override
     public void resetDeck() {
-        index = 0;
+        cardIterator = cards.stream().iterator();
     }
-    
+
 }

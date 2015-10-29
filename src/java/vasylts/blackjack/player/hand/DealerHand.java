@@ -74,7 +74,7 @@ public class DealerHand implements IHand {
             if (score <= MIN_SCORE_TO_CALCULATE_NORMAL_ACE) {
                 score += EnumCardValue.ACE.getScoreValue();
             } else {
-                ++score;
+                score += EnumCardValue.getAceSecondaryScoreValue();
             }
         }
 

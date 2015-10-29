@@ -5,7 +5,7 @@
  */
 package vasylts.blackjack.user;
 
-import vasylts.blackjack.player.wallet.IWallet;
+import vasylts.blackjack.user.wallet.IWallet;
 
 /**
  *

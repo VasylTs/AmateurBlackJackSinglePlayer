@@ -18,18 +18,33 @@ import vasylts.blackjack.deck.card.ICard;
  */
 public class DeckBuilder {
 
+    /**
+     * Creates a new instance of {@link StandartDeck} with all possible cards
+     * defined in {@link EnumCardValue}, {@link EnumCardSuit}
+     * <p>
+     * @return instance of {@link StandartDeck}
+     */
     static public StandartDeck buildStandartDeck() {
         List<ICard> cards = new ArrayList<>();
-
         for (EnumCardValue value : EnumCardValue.values()) {
             for (EnumCardSuit suit : EnumCardSuit.values()) {
                 cards.add(CardFactory.getCard(suit, value));
             }
         }
-        
         return new StandartDeck(cards);
     }
-    
-    
+
+    /**
+     * Creates a new instance of {@link StandartDeck} with all possible cards
+     * defined in {@link EnumCardValue}, {@link EnumCardSuit} and randomly
+     * shuffling it.
+     * <p>
+     * @return instance of {@link StandartDeck}
+     */
+    static public StandartDeck buildStandartShuffledDeck() {
+        StandartDeck deck = buildStandartDeck();
+        deck.shuffleDeck();
+        return deck;
+    }
 
 }

@@ -3,14 +3,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Admin/Documents/GitHub/AmateurBlackJackSinglePlayer/src/java/vasylts/blackjack/main/rest/RestUser.java</file>
-            <file>file:/C:/Users/Admin/Documents/GitHub/AmateurBlackJackSinglePlayer/src/java/vasylts/blackjack/game/end/GameFinishDealerBlackjack.java</file>
-            <file>file:/C:/Users/Admin/Documents/GitHub/AmateurBlackJackSinglePlayer/test/vasylts/blackjack/game/SinglePlayerBlackjackGameTest.java</file>
-            <file>file:/C:/Users/Admin/Documents/GitHub/AmateurBlackJackSinglePlayer/src/java/vasylts/blackjack/main/rest/RestHand.java</file>
-            <file>file:/C:/Users/Admin/Documents/GitHub/AmateurBlackJackSinglePlayer/src/java/vasylts/blackjack/game/end/GameFinishWorker.java</file>
-            <file>file:/C:/Users/Admin/Documents/GitHub/AmateurBlackJackSinglePlayer/src/java/vasylts/blackjack/game/GamePlayerManager.java</file>
-            <file>file:/C:/Users/Admin/Documents/GitHub/AmateurBlackJackSinglePlayer/src/java/vasylts/blackjack/main/rest/RestPlayer.java</file>
-            <file>file:/C:/Users/Admin/Documents/GitHub/AmateurBlackJackSinglePlayer/src/java/vasylts/blackjack/main/rest/RestUserWallet.java</file>
+            <file>file:/C:/Users/Admin/Documents/GitHub/AmateurBlackJackSinglePlayer/AmateurBlackJackSinglePlayer/src/java/vasylts/blackjack/main/rest/RestPlayer.java</file>
+            <file>file:/C:/Users/Admin/Documents/GitHub/AmateurBlackJackSinglePlayer/AmateurBlackJackSinglePlayer/src/java/vasylts/blackjack/game/SinglePlayerBlackjackGame.java</file>
+            <file>file:/C:/Users/Admin/Documents/GitHub/AmateurBlackJackSinglePlayer/AmateurBlackJackSinglePlayer/src/java/vasylts/blackjack/main/GameFactory.java</file>
+            <file>file:/C:/Users/Admin/Documents/GitHub/AmateurBlackJackSinglePlayer/AmateurBlackJackSinglePlayer/src/java/vasylts/blackjack/main/rest/RestHand.java</file>
+            <file>file:/C:/Users/Admin/Documents/GitHub/AmateurBlackJackSinglePlayer/AmateurBlackJackSinglePlayer/src/java/vasylts/blackjack/game/end/GameFinishDealerBlackjack.java</file>
         </group>
     </open-files>
 </project-private>

@@ -24,11 +24,7 @@ public class SimpleCard implements ICard {
     
     @Override
     public boolean equalsRank(ICard anotherCard) {
-        if (anotherCard != null && anotherCard.getCardValue() == this.getCardValue()) {
-            return true;
-        } else { 
-            return false;
-        }
+        return anotherCard != null && anotherCard.getCardValue() == this.getCardValue();
     }
     
     @Override 

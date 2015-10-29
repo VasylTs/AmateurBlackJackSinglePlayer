@@ -6,16 +6,27 @@
 package vasylts.blackjack.deck.card;
 
 /**
- *
+ * Enum that describing possible type of card suit, like SPADES(♠), HEARTS(♥),
+ * DIAMONDS(♦), CLUBS(♣)
+ * <p>
  * @author VasylcTS
  */
 public enum EnumCardSuit {
-    /** (♠) */
-    SPADES,     
-    /** (♥) */
-    HEARTS,   
-    /** (♦) */
-    DIAMONDS,  
-    /** (♣) */
-    CLUBS  
+
+    /**
+     * (♠)
+     */
+    SPADES,
+    /**
+     * (♥)
+     */
+    HEARTS,
+    /**
+     * (♦)
+     */
+    DIAMONDS,
+    /**
+     * (♣)
+     */
+    CLUBS
 }

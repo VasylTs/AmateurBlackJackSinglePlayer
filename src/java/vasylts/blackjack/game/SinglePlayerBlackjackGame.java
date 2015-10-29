@@ -21,7 +21,7 @@ import vasylts.blackjack.user.IUser;
 
 /**
  * This class realize logic for blackjack game with only one user
- *
+ * <p>
  * @author VasylcTS
  */
 public class SinglePlayerBlackjackGame implements IBlackjackGame {
@@ -37,9 +37,11 @@ public class SinglePlayerBlackjackGame implements IBlackjackGame {
      * Creates a new instance of {@code SinglePlayerBlackjackGame} class with
      * specific {@code IDeck}
      * <p>
-     * @param deck A card deck wich will be used for playing this game
+     * @param deck                   A card deck wich will be used for playing
+     *                               this game
      * @param resetDeckAfterEachGame Parameter that stands for reset and shuffle
-     * deck after each game. Should be {@code true} in most cases.
+     *                               deck after each game. Should be
+     *                               {@code true} in most cases.
      * <p>
      * @see vasylts.blackjack.deck.IDeck
      * @see vasylts.blackjack.deck.DeckBuilder
@@ -189,9 +191,9 @@ public class SinglePlayerBlackjackGame implements IBlackjackGame {
     /**
      * Place a bet for a player.
      * <p>
-     * @param userId in single player game does not using
+     * @param userId   in single player game does not using
      * @param playerId long playerId
-     * @param bet Value of a bet.
+     * @param bet      Value of a bet.
      * <p>
      * @return false if it is impossible to place a bet for this player.
      */
@@ -205,7 +207,7 @@ public class SinglePlayerBlackjackGame implements IBlackjackGame {
      * Blackjack action: "Hit: Take another card from the dealer." Gives new
      * card to player from deck.
      * <p>
-     * @param userId in single player game does not using
+     * @param userId   in single player game does not using
      * @param playerId Player id who will receive new card
      * <p>
      * @return Card from deck.
@@ -229,16 +231,19 @@ public class SinglePlayerBlackjackGame implements IBlackjackGame {
 
     /**
      * Blackjack action: "Stand: Take no more cards, also known as "stand pat",
-     * "stick", or "stay"." Stops game for this player.
+     * "stick", or "stay"." Stops game for this player. Doing nothing if player
+     * already used this action.
      * <p>
-     * @param userId in single player game does not using
+     * @param userId   in single player game does not using
      * @param playerId Player id who wants to stop the game
      */
     @Override
     public void standPlayer(long userId, long playerId) {
-        checkState(EnumGameState.GAME_IN_PROCESS);
-        playerManager.standPlayerUnauthorized(playerId);
-        tryToEndGame();
+        if (!playerManager.isPlayerStand(playerId)) {
+            checkState(EnumGameState.GAME_IN_PROCESS);
+            playerManager.standPlayerUnauthorized(playerId);
+            tryToEndGame();
+        }
     }
 
     /**
@@ -285,6 +290,7 @@ public class SinglePlayerBlackjackGame implements IBlackjackGame {
      * @param user User who wants to play this game.
      * <p>
      * @return player`s id in game.
+     * <p>
      * @throws IllegalStateException when game already have player
      */
     @Override
@@ -304,7 +310,7 @@ public class SinglePlayerBlackjackGame implements IBlackjackGame {
      * This method will delete user`s player from this instance of
      * IBlackjackGame
      * <p>
-     * @param userId in single player game does not using
+     * @param userId   in single player game does not using
      * <p>
      * @param playerId Player`s id in this game
      * <p>
@@ -367,7 +373,7 @@ public class SinglePlayerBlackjackGame implements IBlackjackGame {
      * otherwise it will return only opened(not hidden) dealer cards.
      * <p>
      * @return dealer cards if all players used action: "Stand" otherwise it
-     * will return only opened(not hidden) dealer cards.
+     *         will return only opened(not hidden) dealer cards.
      */
     @Override
     public List<ICard> getDealerCards() {
@@ -380,7 +386,7 @@ public class SinglePlayerBlackjackGame implements IBlackjackGame {
      * otherwise it return {@code null}
      * <p>
      * @return dealer score only if all players used action: "Stand" otherwise
-     * it return {@code null}
+     *         it return {@code null}
      */
     @Override
     public int getDealerScore() {

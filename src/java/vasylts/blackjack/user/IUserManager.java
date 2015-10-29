@@ -5,15 +5,12 @@
  */
 package vasylts.blackjack.user;
 
-import vasylts.blackjack.player.wallet.IWallet;
-
 /**
  *
  * @author VasylcTS
  */
 public interface IUserManager {
-    public boolean addUser(IUser user);
-    public boolean createUser(String login, String password, IWallet wallet);
+    public Long createUser(String login, String password);
     public boolean deleteUser(Long id);
     public boolean deleteUser(String login, String password);
     public IUser getUser(Long id);

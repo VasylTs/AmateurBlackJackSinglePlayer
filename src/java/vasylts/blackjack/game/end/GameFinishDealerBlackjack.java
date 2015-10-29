@@ -6,12 +6,14 @@
 package vasylts.blackjack.game.end;
 
 import java.util.Collection;
-import java.util.Map;
 import vasylts.blackjack.player.hand.DealerHand;
 import vasylts.blackjack.player.IPlayer;
 
 /**
- *
+ * This class process game end, when dealer has a blackjack in his hand.
+ * Other players can get status "draw" if they also have blackjack or "lose"
+ * otherwise. Players can not win in this situation.
+ * <p>
  * @author VasylcTS
  */
 public class GameFinishDealerBlackjack implements IGameFinishWorker {
@@ -22,12 +24,12 @@ public class GameFinishDealerBlackjack implements IGameFinishWorker {
             throw new IllegalStateException("Can not give prize to winner before dealer called action \"STAND\"");
         }
         players.stream().forEach((pl) -> {
-                if (pl.getHand().isBlackjack()) {
-                    givePrizePlayerDraw(pl);
-                } else {
-                    givePrizePlayerLose(pl);
-                }
-            });
+            if (pl.getHand().isBlackjack()) {
+                givePrizePlayerDraw(pl);
+            } else {
+                givePrizePlayerLose(pl);
+            }
+        });
     }
 
     private void givePrizePlayerDraw(IPlayer player) {
@@ -37,5 +39,5 @@ public class GameFinishDealerBlackjack implements IGameFinishWorker {
     private void givePrizePlayerLose(IPlayer player) {
         // we already received our money he he he
     }
-    
+
 }

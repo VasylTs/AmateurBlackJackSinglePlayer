@@ -5,12 +5,14 @@
  */
 package vasylts.blackjack.deck;
 
+import java.util.NoSuchElementException;
+
 
 /**
  *
  * @author VasylcTS
  */
-public class NoCardInDeckException extends RuntimeException {
+public class NoCardInDeckException extends NoSuchElementException {
     public NoCardInDeckException() {
         super();
     }

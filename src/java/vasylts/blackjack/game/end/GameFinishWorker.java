@@ -11,19 +11,23 @@ import vasylts.blackjack.player.hand.DealerHand;
 import vasylts.blackjack.player.IPlayer;
 
 /**
- *
+ * This class process game end, when dealer has score less or equals then 21(but
+ * not blackjack). Other players can get status "win" if they have blackjack in
+ * their hands or "draw" or "lose" if they busted or their score is less than
+ * the dealer score. 
+ * <p>
  * @author VasylcTS
  */
 public class GameFinishWorker implements IGameFinishWorker {
-    
+
     @Override
-    public void givePrizesToWinners(DealerHand dealerHand, Collection<IPlayer> players) { 
+    public void givePrizesToWinners(DealerHand dealerHand, Collection<IPlayer> players) {
         if (!dealerHand.isStand()) {
             throw new IllegalStateException("Can not give prize to winner before dealer called action \"STAND\"");
         }
         int dealerScore = dealerHand.getScore();
         players.stream().forEach((pl) -> {
-            if (pl.getHand().getScore() > dealerScore) {
+            if (pl.getHand().getScore() > dealerScore || pl.getHand().isBlackjack()) {
                 givePrizePlayerWin(pl);
             } else if (pl.getHand().getScore() == dealerScore) {
                 givePrizePlayerDraw(pl);
@@ -32,7 +36,7 @@ public class GameFinishWorker implements IGameFinishWorker {
             }
         });
     }
-    
+
     private void givePrizePlayerWin(IPlayer player) {
         double bet = player.getBet();
         double prize = (player.getHand().isBlackjack() ? bet * 1.5 : bet) + bet;

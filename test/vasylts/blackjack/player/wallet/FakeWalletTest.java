@@ -5,6 +5,7 @@
  */
 package vasylts.blackjack.player.wallet;
 
+import vasylts.blackjack.user.wallet.FakeWallet;
 import org.junit.Test;
 import static org.junit.Assert.*;
 

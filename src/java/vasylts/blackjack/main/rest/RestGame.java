@@ -56,7 +56,7 @@ public class RestGame {
                 return Response.ok(new Gson().toJson(game.getDealerCards())).build();
             }
         } catch (Exception e) {
-            throw new BlackjackServerException(e.getMessage());
+            throw new BlackjackServerException(e.toString());
         }
     }
 
@@ -72,7 +72,7 @@ public class RestGame {
                 return Response.ok(new Gson().toJson(game.getDealerScore())).build();
             }
         } catch (Exception e) {
-            throw new BlackjackServerException(e.getMessage());
+            throw new BlackjackServerException(e.toString());
         }
     }
 
@@ -94,7 +94,7 @@ public class RestGame {
                 return Response.ok(new Gson().toJson(game.getPlayersInGame())).build();
             }
         } catch (Exception e) {
-            throw new BlackjackServerException(e.getMessage());
+            throw new BlackjackServerException(e.toString());
         }
     }
 
@@ -117,7 +117,7 @@ public class RestGame {
                 return Response.ok(new Gson().toJson(game.getState())).build();
             }
         } catch (Exception e) {
-            throw new BlackjackServerException(e.getMessage());
+            throw new BlackjackServerException(e.toString());
         }
     }
 
@@ -137,7 +137,7 @@ public class RestGame {
             IBlackjackGame game = GameFactory.getGame(gameId);
             return Response.ok(g.toJson(game)).build();
         } catch (Exception e) {
-            throw new BlackjackServerException(e.getMessage());
+            throw new BlackjackServerException(e.toString());
         }
     }
 }

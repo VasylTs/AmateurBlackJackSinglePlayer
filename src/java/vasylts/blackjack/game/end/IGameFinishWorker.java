@@ -10,9 +10,22 @@ import vasylts.blackjack.player.hand.DealerHand;
 import vasylts.blackjack.player.IPlayer;
 
 /**
- *
+ * Realization of this interface should check dealer and players hands and find
+ * a winners.
+ * <p>
  * @author VasylcTS
+ * @see GameFinishWorker
+ * @see GameFinishDealerBlackjack
+ * @see GameFinishDealerBusted
  */
 public interface IGameFinishWorker {
+
+    /**
+     * Take bet of player if he loosed, return his bet if he`s score equals
+     * dealer`s score, and give a prize if he won
+     * <p>
+     * @param dealerHand 
+     * @param players
+     */
     public void givePrizesToWinners(DealerHand dealerHand, Collection<IPlayer> players);
 }

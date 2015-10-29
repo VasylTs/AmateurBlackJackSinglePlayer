@@ -53,11 +53,11 @@ public class RestPlayer {
     @Produces({MediaType.TEXT_PLAIN})
     public Response getNewPlayerId(@PathParam("gameId") Long gameId, @PathParam("userId") Long userId) {
         try {
-            IUser user = UserFactory.getSimpleUserManager().getUser(userId);
+            IUser user = UserFactory.getStandartUserManager().getUser(userId);
             Long playerId = GameFactory.getGame(gameId).addUserToGame(user);
             return Response.ok(playerId.toString()).build();
         } catch (Exception e) {
-            throw new BlackjackServerException(e.getMessage());
+            throw new BlackjackServerException(e.toString());
         }
     }
     
@@ -74,7 +74,7 @@ public class RestPlayer {
             Boolean deleted = GameFactory.getGame(gameId).deletePlayerByUser(0, playerId);
             return Response.ok(deleted).build();
         } catch (Exception e) {
-            throw new BlackjackServerException(e.getMessage());
+            throw new BlackjackServerException(e.toString());
         }
     }
 }

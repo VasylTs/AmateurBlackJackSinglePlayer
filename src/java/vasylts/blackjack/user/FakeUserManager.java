@@ -12,34 +12,34 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
 import java.util.function.Predicate;
-import vasylts.blackjack.player.wallet.IWallet;
+import vasylts.blackjack.user.wallet.FakeWallet;
+import vasylts.blackjack.user.wallet.IWallet;
 
 /**
- *
+ * Test implementation of IUserManager
  * @author VasylcTS
  */
-public class UserManager implements IUserManager {
+public class FakeUserManager implements IUserManager {
 
     private final Set<IUser> users = new HashSet<>();
 
-    @Override
-    public boolean addUser(IUser user) {
+    public Long addUser(IUser user) {
         if (user != null) {
             Predicate<IUser> userAlreadyExists = (IUser someUser) -> {
                     return Objects.equals(user.getLogin(), someUser.getLogin());
             };
             if (!users.stream().anyMatch(userAlreadyExists)) {
                 users.add(user);
-                return true;
+                return users.size() - 1l;
             }
         }
-        return false;
+        return null;
     }
 
     @Override
-    public boolean createUser(String login, String password, IWallet wallet) {
+    public Long createUser(String login, String password) {
         Random rand = new Random();
-        IUser user = new SimpleUser(rand.nextLong(), login, password, wallet);
+        IUser user = new FakeUser(rand.nextLong(), login, password, new FakeWallet());
         return addUser(user);
     }
     

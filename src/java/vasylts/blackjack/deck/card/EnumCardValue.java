@@ -6,11 +6,13 @@
 package vasylts.blackjack.deck.card;
 
 /**
- *
+ * Enum that describes possible card rank. From Two to Ace. There is no Joker in
+ * this enum
+ * <p>
  * @author VasylcTS
  */
 public enum EnumCardValue {
-    
+
     TWO(2),
     THREE(3),
     FOUR(4),
@@ -24,13 +26,18 @@ public enum EnumCardValue {
     QUEEN(10),
     KING(10),
     ACE(11);
-    
+
     private final int scoreVal;
+
     EnumCardValue(int scoreValue) {
         scoreVal = scoreValue;
     }
-    
+
     public int getScoreValue() {
         return scoreVal;
+    }
+
+    public static int getAceSecondaryScoreValue() {
+        return 1; // Ace can be calculated like 11 and 1
     }
 }

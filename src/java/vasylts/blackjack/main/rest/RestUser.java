@@ -5,14 +5,12 @@
  */
 package vasylts.blackjack.main.rest;
 
-import com.google.gson.Gson;
 import java.math.BigDecimal;
 import javax.ejb.Stateless;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -20,7 +18,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import vasylts.blackjack.jaxb.EntityUser;
 import vasylts.blackjack.main.rest.error.BlackjackServerException;
-import vasylts.blackjack.player.wallet.WalletFactory;
 import vasylts.blackjack.user.IUser;
 import vasylts.blackjack.user.UserFactory;
 
@@ -46,13 +43,18 @@ public class RestUser {
     @POST
     @Consumes({MediaType.APPLICATION_JSON})
     public Response createUser(EntityUser user) {
-        boolean isUserCreated = UserFactory.getSimpleUserManager().createUser(user.getLogin(), user.getPassword(), WalletFactory.getNewWallet());
-        if (isUserCreated) {
-            return Response.ok().build();
-        } else {
-            throw new BlackjackServerException("Such user already exists!");
+        try {
+            Long isUserCreated = UserFactory.getStandartUserManager().createUser(user.getLogin(), user.getPassword());
+            if (isUserCreated != null) {
+                return Response.ok().build();
+            } else {
+                throw new BlackjackServerException("Such user already exists!");
+            }
+        } catch (BlackjackServerException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new BlackjackServerException(e.toString());
         }
-
     }
 
     /**
@@ -67,7 +69,7 @@ public class RestUser {
     @Produces({MediaType.APPLICATION_JSON})
     public Response getUserById(@PathParam("id") Long id) {
         try {
-            IUser user = UserFactory.getSimpleUserManager().getUser(id);
+            IUser user = UserFactory.getStandartUserManager().getUser(id);
             if (user == null) {
                 return Response.status(Response.Status.NOT_FOUND).build();
             } else {
@@ -79,7 +81,7 @@ public class RestUser {
                 return Response.ok(returningUser).build();
             }
         } catch (Exception e) {
-            throw new BlackjackServerException(e.getMessage());
+            throw new BlackjackServerException(e.toString());
         }
     }
 
@@ -96,7 +98,7 @@ public class RestUser {
     @Produces({MediaType.APPLICATION_JSON})
     public Response getUserByLogPass(@PathParam("login") String login, @PathParam("password") String password) {
         try {
-            IUser user = UserFactory.getSimpleUserManager().getUser(login, password);
+            IUser user = UserFactory.getStandartUserManager().getUser(login, password);
             if (user == null) {
                 return Response.status(Response.Status.NOT_FOUND).build();
             } else {
@@ -108,7 +110,7 @@ public class RestUser {
                 return Response.ok(returningUser).build();
             }
         } catch (Exception e) {
-            throw new BlackjackServerException(e.getMessage());
+            throw new BlackjackServerException(e.toString());
         }
     }
 
@@ -120,7 +122,7 @@ public class RestUser {
     @DELETE
     @Path("{login}/{password}")
     public void deleteUserByLogPass(@PathParam("login") String login, @PathParam("password") String password) {
-        UserFactory.getSimpleUserManager().deleteUser(login, password);
+        UserFactory.getStandartUserManager().deleteUser(login, password);
     }
 
     /**
@@ -130,7 +132,7 @@ public class RestUser {
     @DELETE
     @Path("{id}")
     public void deleteUserById(@PathParam("id") Long id) {
-        UserFactory.getSimpleUserManager().deleteUser(id);
+        UserFactory.getStandartUserManager().deleteUser(id);
     }
 
 }

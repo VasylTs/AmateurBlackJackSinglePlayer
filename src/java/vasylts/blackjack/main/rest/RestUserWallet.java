@@ -7,6 +7,7 @@ package vasylts.blackjack.main.rest;
 
 import javax.ejb.Stateless;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -30,9 +31,9 @@ public class RestUserWallet {
     @Produces({MediaType.TEXT_PLAIN})
     public Response getBalance(@PathParam("userId") Long id) {
         try {
-            return Response.ok(UserFactory.getSimpleUserManager().getUser(id).getWallet().getBalance()).build();
+            return Response.ok(UserFactory.getStandartUserManager().getUser(id).getWallet().getBalance()).build();
         } catch (Exception e) {
-            throw new BlackjackServerException(e.getMessage());
+            throw new BlackjackServerException(e.toString());
         }
     }
     
@@ -40,9 +41,9 @@ public class RestUserWallet {
     @Consumes({MediaType.TEXT_PLAIN})
     public Response addToBalance(Double amount, @PathParam("userId") Long id) {
         try {
-            return Response.ok(UserFactory.getSimpleUserManager().getUser(id).getWallet().addFunds(amount)).build();
+            return Response.ok(UserFactory.getStandartUserManager().getUser(id).getWallet().addFunds(amount)).build();
         } catch (Exception e) {
-            throw new BlackjackServerException(e.getMessage());
+            throw new BlackjackServerException(e.toString());
         }
     }
     
@@ -50,9 +51,9 @@ public class RestUserWallet {
     @Consumes({MediaType.TEXT_PLAIN})
     public Response getFromBalance(Double amount, @PathParam("userId") Long id) {
         try {
-            return Response.ok(UserFactory.getSimpleUserManager().getUser(id).getWallet().withdrawMoney(amount)).build();
+            return Response.ok(UserFactory.getStandartUserManager().getUser(id).getWallet().withdrawMoney(amount)).build();
         } catch (Exception e) {
-            throw new BlackjackServerException(e.getMessage());
+            throw new BlackjackServerException(e.toString());
         }
     }
     

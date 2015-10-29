@@ -6,12 +6,13 @@
 package vasylts.blackjack.game.end;
 
 import java.util.Collection;
-import java.util.Map;
 import vasylts.blackjack.player.hand.DealerHand;
 import vasylts.blackjack.player.IPlayer;
 
 /**
- *
+ * This class process game end, when dealer busted his hand.
+ * Other players can get status "win" if they have not been busted or "lose"
+ * otherwise. Players can not get status "draw".
  * @author VasylcTS
  */
 public class GameFinishDealerBusted implements IGameFinishWorker {
