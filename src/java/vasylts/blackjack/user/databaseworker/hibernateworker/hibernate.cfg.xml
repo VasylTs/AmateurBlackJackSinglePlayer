@@ -8,6 +8,7 @@
     <property name="hibernate.connection.username">BlackjackDBUser</property>
     <property name="hibernate.connection.password">BlackjackDBPassword</property>
     <property name="hibernate.current_session_context_class">thread</property>
+    <property name="hibernate.enable_lazy_load_no_trans">true</property>
     <mapping resource="vasylts/blackjack/user/databaseworker/hibernateworker/Blackjackuser.hbm.xml"/>
     <mapping resource="vasylts/blackjack/user/databaseworker/hibernateworker/Userwallet.hbm.xml"/>
   </session-factory>

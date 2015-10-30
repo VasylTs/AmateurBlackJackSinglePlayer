@@ -20,7 +20,7 @@ public class UserFactory {
     private static IUserManager userManager;
 
     public static IUserManager getStandartUserManager() {
-        return getFakeUserManager();
+        return getHibernateUserManager();
     }
 
     private static IUserManager getFakeUserManager() {

@@ -6,7 +6,7 @@
     <class name="vasylts.blackjack.user.databaseworker.hibernateworker.Blackjackuser" table="BLACKJACKUSER" schema="BLACKJACKDBUSER" optimistic-lock="version">
         <id name="id" type="long">
             <column name="ID" />
-            <generator class="assigned" />
+            <generator class="identity" />
         </id>
         <property name="login" type="string">
             <column name="LOGIN" length="50" not-null="true" unique="true" />

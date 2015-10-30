@@ -7,6 +7,7 @@ package vasylts.blackjack.user.wallet;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import vasylts.blackjack.user.databaseworker.hibernateworker.BlackjackHibernateUtil;
 import vasylts.blackjack.user.databaseworker.hibernateworker.Userwallet;
 
@@ -37,7 +38,9 @@ public class HibernateWallet implements IWallet {
     @Override
     public double getBalance() throws HibernateException {
         Session session = BlackjackHibernateUtil.getSessionFactory().getCurrentSession();
+        Transaction tr = session.beginTransaction();
         Userwallet wallet = (Userwallet) session.load(Userwallet.class, walletId);
+        tr.commit();
         return wallet.getBalance();
     }
     
@@ -51,10 +54,13 @@ public class HibernateWallet implements IWallet {
     @Override
     public double withdrawMoney(double amount) throws HibernateException {
         Session session = BlackjackHibernateUtil.getSessionFactory().getCurrentSession();
+        Transaction tr = session.beginTransaction();
         Userwallet wallet = (Userwallet) session.load(Userwallet.class, walletId);
+
         double newBalance = wallet.getBalance() - Math.abs(amount);
         wallet.setBalance(newBalance);
-
+        session.save(wallet);
+        tr.commit();
         return newBalance;
 
     }
@@ -68,10 +74,12 @@ public class HibernateWallet implements IWallet {
     @Override
     public double addFunds(double amount) throws HibernateException {
         Session session = BlackjackHibernateUtil.getSessionFactory().getCurrentSession();
+        Transaction tr = session.beginTransaction();
         Userwallet wallet = (Userwallet) session.load(Userwallet.class, walletId);
         double newBalance = wallet.getBalance() + Math.abs(amount);
         wallet.setBalance(newBalance);
-
+        session.save(wallet);
+        tr.commit();
         return newBalance;
     }
  
@@ -83,9 +91,9 @@ public class HibernateWallet implements IWallet {
         Session session = BlackjackHibernateUtil.getSessionFactory().getCurrentSession();
         Userwallet wallet = new Userwallet();
         wallet.setBalance(0.0);
-        session.beginTransaction();
+        Transaction tr = session.beginTransaction();
         session.save(wallet);
-        session.getTransaction().commit();
+        tr.commit();
 
         return new HibernateWallet(wallet.getId());
     }

@@ -6,7 +6,7 @@
     <class name="vasylts.blackjack.user.databaseworker.hibernateworker.Userwallet" table="USERWALLET" schema="BLACKJACKDBUSER" optimistic-lock="version">
         <id name="id" type="long">
             <column name="ID" />
-            <generator class="assigned" />
+            <generator class="identity" />
         </id>
         <property name="balance" type="java.lang.Double">
             <column name="BALANCE" precision="52" scale="0" />

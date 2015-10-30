@@ -239,8 +239,7 @@ public class SinglePlayerBlackjackGame implements IBlackjackGame {
      */
     @Override
     public void standPlayer(long userId, long playerId) {
-        if (!playerManager.isPlayerStand(playerId)) {
-            checkState(EnumGameState.GAME_IN_PROCESS);
+        if (state == EnumGameState.GAME_IN_PROCESS) {
             playerManager.standPlayerUnauthorized(playerId);
             tryToEndGame();
         }

@@ -8,6 +8,7 @@ package vasylts.blackjack.user;
 import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
 import vasylts.blackjack.user.databaseworker.hibernateworker.BlackjackHibernateUtil;
 import vasylts.blackjack.user.databaseworker.hibernateworker.Blackjackuser;
@@ -82,7 +83,9 @@ public class HibernateUserManager implements IUserManager {
         Session session = null;
         try {
             session = BlackjackHibernateUtil.getSessionFactory().openSession();
+            Transaction tx = session.beginTransaction();
             Blackjackuser hibUser = (Blackjackuser)session.load(Blackjackuser.class, id);
+            tx.commit();
             HibernateWallet hibWallet = new HibernateWallet(hibUser.getWalletid());
             HibernateUser user = new HibernateUser(hibUser.getId(), hibUser.getLogin(), hibUser.getPassword(), hibWallet);
             return user;
@@ -98,11 +101,13 @@ public class HibernateUserManager implements IUserManager {
         Session session = null;
         try {
             session = BlackjackHibernateUtil.getSessionFactory().openSession();
+            Transaction tx = session.beginTransaction();
             Criteria criteria = session.createCriteria(Blackjackuser.class); 
             criteria.add(Restrictions.eq("login", login));
             criteria.add(Restrictions.eq("password", password));
             List results = criteria.list();
             Blackjackuser hibUser = (Blackjackuser)results.get(0);
+            tx.commit();
             HibernateWallet hibWallet = new HibernateWallet(hibUser.getWalletid());
             HibernateUser user = new HibernateUser(hibUser.getId(), hibUser.getLogin(), hibUser.getPassword(), hibWallet);
             return user;

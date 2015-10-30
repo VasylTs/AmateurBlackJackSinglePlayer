@@ -224,8 +224,10 @@ public class RestHand {
                 return Response.status(Response.Status.NOT_FOUND).entity("There is no such game.").build();
             } else if (isStand) {
                 game.standPlayer(0, playerId);
+                return Response.ok().build();
+            } else {
+                return Response.status(Response.Status.BAD_REQUEST).entity("Status not changed, plese send boolean: true, if you want to change status.").build();
             }
-            return Response.ok().build();
         } catch (Exception e) {
             throw new BlackjackServerException(e.toString());
         }
@@ -250,8 +252,11 @@ public class RestHand {
                 return Response.status(Response.Status.NOT_FOUND).entity("There is no such game.").build();
             } else if (isReady) {
                 game.readyPlayerToStart(playerId);
+                return Response.ok().build();
+            } else {
+                return Response.status(Response.Status.BAD_REQUEST).entity("Status not changed, plese send boolean: true, if you want to change status.").build();
             }
-            return Response.ok().build();
+            
         } catch (Exception e) {
             throw new BlackjackServerException(e.toString());
         }
@@ -276,8 +281,10 @@ public class RestHand {
                 return Response.status(Response.Status.NOT_FOUND).entity("There is no such game.").build();
             } else if (isReady) {
                 game.readyPlayerToEnd(playerId);
+                return Response.ok().build();
+            } else {
+                return Response.status(Response.Status.BAD_REQUEST).entity("Status not changed, plese send boolean: true, if you want to change status.").build();
             }
-            return Response.ok().build();
         } catch (Exception e) {
             throw new BlackjackServerException(e.toString());
         }
