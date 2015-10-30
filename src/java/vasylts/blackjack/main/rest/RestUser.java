@@ -53,6 +53,7 @@ public class RestUser {
         } catch (BlackjackServerException e) {
             throw e;
         } catch (Exception e) {
+            e.printStackTrace();
             throw new BlackjackServerException(e.toString());
         }
     }
@@ -81,6 +82,7 @@ public class RestUser {
                 return Response.ok(returningUser).build();
             }
         } catch (Exception e) {
+            e.printStackTrace();
             throw new BlackjackServerException(e.toString());
         }
     }
@@ -110,6 +112,7 @@ public class RestUser {
                 return Response.ok(returningUser).build();
             }
         } catch (Exception e) {
+            e.printStackTrace();
             throw new BlackjackServerException(e.toString());
         }
     }

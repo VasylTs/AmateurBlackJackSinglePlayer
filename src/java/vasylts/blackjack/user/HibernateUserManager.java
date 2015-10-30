@@ -10,6 +10,7 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.exception.ConstraintViolationException;
 import vasylts.blackjack.user.databaseworker.hibernateworker.BlackjackHibernateUtil;
 import vasylts.blackjack.user.databaseworker.hibernateworker.Blackjackuser;
 import vasylts.blackjack.user.wallet.HibernateWallet;
@@ -23,6 +24,7 @@ public class HibernateUserManager implements IUserManager {
     @Override
     public Long createUser(String login, String password) {
         Session session = null;
+        Transaction tr = null;
         try {
             Blackjackuser user = new Blackjackuser();
             user.setLogin(login);
@@ -30,11 +32,16 @@ public class HibernateUserManager implements IUserManager {
             HibernateWallet wallet = HibernateWallet.createNewWallet();
             user.setWalletid(wallet.getWalletId());
             session = BlackjackHibernateUtil.getSessionFactory().openSession();
-            session.beginTransaction();
+            tr = session.beginTransaction();
             session.save(user);
-            session.getTransaction().commit();
+            tr.commit();
             return user.getId();
+        } catch (ConstraintViolationException e) {
+            throw new RuntimeException("User with such login already exists! ");
         } finally {
+            if (tr != null && tr.isActive()) {
+                tr.rollback();
+            }
             if (session != null && session.isOpen()) {
                 session.close();
             }
@@ -44,14 +51,18 @@ public class HibernateUserManager implements IUserManager {
     @Override
     public boolean deleteUser(Long id) {
         Session session = null;
+        Transaction tr = null;
         try {
             Blackjackuser user = new Blackjackuser();
             user.setId(id);
             session = BlackjackHibernateUtil.getSessionFactory().openSession();
-            session.beginTransaction();
+            tr = session.beginTransaction();
             session.delete(user);
-            session.getTransaction().commit();
+            tr.commit();
         } finally {
+            if (tr != null && tr.isActive()) {
+                tr.rollback();
+            }
             if (session != null && session.isOpen()) {
                 session.close();
             }
@@ -62,15 +73,19 @@ public class HibernateUserManager implements IUserManager {
     @Override
     public boolean deleteUser(String login, String password) {
         Session session = null;
+        Transaction tr = null;
         try {
             Blackjackuser user = new Blackjackuser();
             user.setLogin(login);
             user.setPassword(password);
             session = BlackjackHibernateUtil.getSessionFactory().openSession();
-            session.beginTransaction();
+            tr = session.beginTransaction();
             session.delete(user);
-            session.getTransaction().commit();
+            tr.commit();
         } finally {
+            if (tr != null && tr.isActive()) {
+                tr.rollback();
+            }
             if (session != null && session.isOpen()) {
                 session.close();
             }
@@ -81,15 +96,19 @@ public class HibernateUserManager implements IUserManager {
     @Override
     public IUser getUser(Long id) {
         Session session = null;
+        Transaction tr = null;
         try {
             session = BlackjackHibernateUtil.getSessionFactory().openSession();
-            Transaction tx = session.beginTransaction();
-            Blackjackuser hibUser = (Blackjackuser)session.load(Blackjackuser.class, id);
-            tx.commit();
+            tr = session.beginTransaction();
+            Blackjackuser hibUser = (Blackjackuser) session.load(Blackjackuser.class, id);
+            tr.commit();
             HibernateWallet hibWallet = new HibernateWallet(hibUser.getWalletid());
             HibernateUser user = new HibernateUser(hibUser.getId(), hibUser.getLogin(), hibUser.getPassword(), hibWallet);
             return user;
         } finally {
+            if (tr != null && tr.isActive()) {
+                tr.rollback();
+            }
             if (session != null && session.isOpen()) {
                 session.close();
             }
@@ -99,19 +118,23 @@ public class HibernateUserManager implements IUserManager {
     @Override
     public IUser getUser(String login, String password) {
         Session session = null;
+        Transaction tr = null;
         try {
             session = BlackjackHibernateUtil.getSessionFactory().openSession();
-            Transaction tx = session.beginTransaction();
-            Criteria criteria = session.createCriteria(Blackjackuser.class); 
+            tr = session.beginTransaction();
+            Criteria criteria = session.createCriteria(Blackjackuser.class);
             criteria.add(Restrictions.eq("login", login));
             criteria.add(Restrictions.eq("password", password));
             List results = criteria.list();
-            Blackjackuser hibUser = (Blackjackuser)results.get(0);
-            tx.commit();
+            Blackjackuser hibUser = (Blackjackuser) results.get(0);
+            tr.commit();
             HibernateWallet hibWallet = new HibernateWallet(hibUser.getWalletid());
             HibernateUser user = new HibernateUser(hibUser.getId(), hibUser.getLogin(), hibUser.getPassword(), hibWallet);
             return user;
         } finally {
+            if (tr != null && tr.isActive()) {
+                tr.rollback();
+            }
             if (session != null && session.isOpen()) {
                 session.close();
             }

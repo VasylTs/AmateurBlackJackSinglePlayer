@@ -3,15 +3,8 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/Projects/AmateurBlackJackSinglePlayerCopy/src/java/vasylts/blackjack/user/HibernateUser.java</file>
-            <file>file:/D:/Projects/AmateurBlackJackSinglePlayerCopy/src/java/vasylts/blackjack/user/HibernateUserManager.java</file>
-            <file>file:/D:/Projects/AmateurBlackJackSinglePlayerCopy/src/java/vasylts/blackjack/main/rest/RestUser.java</file>
-            <file>file:/D:/Projects/AmateurBlackJackSinglePlayerCopy/src/java/vasylts/blackjack/user/wallet/IWallet.java</file>
-            <file>file:/D:/Projects/AmateurBlackJackSinglePlayerCopy/src/java/vasylts/blackjack/user/wallet/HibernateWallet.java</file>
-            <file>file:/D:/Projects/AmateurBlackJackSinglePlayerCopy/src/java/vasylts/blackjack/main/rest/RestHand.java</file>
-            <file>file:/D:/Projects/AmateurBlackJackSinglePlayerCopy/src/java/vasylts/blackjack/game/IBlackjackGame.java</file>
-            <file>file:/D:/Projects/AmateurBlackJackSinglePlayerCopy/src/java/vasylts/blackjack/game/SinglePlayerBlackjackGame.java</file>
-            <file>file:/D:/Projects/AmateurBlackJackSinglePlayerCopy/src/java/vasylts/blackjack/game/GamePlayerManager.java</file>
+            <file>file:/D:/Projects/git/AmateurBlackJack/web/WEB-INF/web.xml</file>
+            <file>file:/D:/Projects/git/AmateurBlackJack/src/java/vasylts/blackjack/game/SinglePlayerBlackjackGame.java</file>
         </group>
     </open-files>
 </project-private>

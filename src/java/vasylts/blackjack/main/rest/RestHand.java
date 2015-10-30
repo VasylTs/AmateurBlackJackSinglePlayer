@@ -44,6 +44,7 @@ public class RestHand {
         try {
             return Response.ok("This is test method").build();
         } catch (Exception e) {
+            e.printStackTrace();
             throw new BlackjackServerException(e.toString());
         }
     }
@@ -68,6 +69,7 @@ public class RestHand {
                 return Response.ok(game.getPlayerScore(playerId)).build();
             }
         } catch (Exception e) {
+            e.printStackTrace();
             throw new BlackjackServerException(e.toString());
         }
     }
@@ -93,6 +95,7 @@ public class RestHand {
                 return Response.ok(new Gson().toJson(game.getPlayerCards(playerId))).build();
             }
         } catch (Exception e) {
+            e.printStackTrace();
             throw new BlackjackServerException(e.toString());
         }
     }
@@ -117,6 +120,7 @@ public class RestHand {
                 return Response.ok(game.getPlayerBet(playerId)).build();
             }
         } catch (Exception e) {
+            e.printStackTrace();
             throw new BlackjackServerException(e.toString());
         }
     }
@@ -141,6 +145,7 @@ public class RestHand {
                 return Response.ok(game.placeBet(0, playerId, bet)).build();
             }
         } catch (Exception e) {
+            e.printStackTrace();
             throw new BlackjackServerException(e.toString());
         }
     }
@@ -167,6 +172,7 @@ public class RestHand {
                 return Response.ok(resp).build();
             }
         } catch (Exception e) {
+            e.printStackTrace();
             throw new BlackjackServerException(e.toString());
         }
     }
@@ -229,6 +235,7 @@ public class RestHand {
                 return Response.status(Response.Status.BAD_REQUEST).entity("Status not changed, plese send boolean: true, if you want to change status.").build();
             }
         } catch (Exception e) {
+            e.printStackTrace();
             throw new BlackjackServerException(e.toString());
         }
     }
@@ -258,6 +265,7 @@ public class RestHand {
             }
             
         } catch (Exception e) {
+            e.printStackTrace();
             throw new BlackjackServerException(e.toString());
         }
     }
@@ -286,6 +294,7 @@ public class RestHand {
                 return Response.status(Response.Status.BAD_REQUEST).entity("Status not changed, plese send boolean: true, if you want to change status.").build();
             }
         } catch (Exception e) {
+            e.printStackTrace();
             throw new BlackjackServerException(e.toString());
         }
     }
@@ -322,6 +331,7 @@ public class RestHand {
                 return Response.ok(resp).build();
             }
         } catch (Exception e) {
+            e.printStackTrace();
             throw new BlackjackServerException(e.toString());
         }
     }

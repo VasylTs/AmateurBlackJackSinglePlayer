@@ -57,6 +57,7 @@ public class RestPlayer {
             Long playerId = GameFactory.getGame(gameId).addUserToGame(user);
             return Response.ok(playerId.toString()).build();
         } catch (Exception e) {
+            e.printStackTrace();
             throw new BlackjackServerException(e.toString());
         }
     }
@@ -74,6 +75,7 @@ public class RestPlayer {
             Boolean deleted = GameFactory.getGame(gameId).deletePlayerByUser(0, playerId);
             return Response.ok(deleted).build();
         } catch (Exception e) {
+            e.printStackTrace();
             throw new BlackjackServerException(e.toString());
         }
     }

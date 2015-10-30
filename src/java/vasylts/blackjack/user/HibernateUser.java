@@ -8,6 +8,7 @@ package vasylts.blackjack.user;
 import net.sf.ehcache.hibernate.HibernateUtil;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import vasylts.blackjack.user.databaseworker.hibernateworker.BlackjackHibernateUtil;
 import vasylts.blackjack.user.databaseworker.hibernateworker.Blackjackuser;
 import vasylts.blackjack.user.wallet.HibernateWallet;
@@ -27,17 +28,29 @@ public class HibernateUser extends FakeUser {
 
     @Override
     public void changePassword(String newPassword) throws HibernateException {
-        Session session = BlackjackHibernateUtil.getSessionFactory().openSession();
-        Blackjackuser user = new Blackjackuser();
-        user.setId(super.getId());
-        user.setLogin(super.getLogin());
-        user.setPassword(newPassword);
-        user.setWalletid(walletId);
-        session.beginTransaction();
-        session.update(user);
-        session.getTransaction().commit();
-        
-        session.close();
+        Session session = null;
+        Transaction tr = null;
+        try {
+            Blackjackuser user = new Blackjackuser();
+            user.setId(super.getId());
+            user.setLogin(super.getLogin());
+            user.setPassword(newPassword);
+            user.setWalletid(walletId);
+            
+            session = BlackjackHibernateUtil.getSessionFactory().openSession();
+            tr = session.beginTransaction();
+            session.update(user);
+            tr.commit();
+
+            session.close();
+        } finally {
+            if (tr != null && tr.isActive()) {
+                tr.rollback();
+            }
+            if (session != null && session.isOpen()) {
+                session.close();
+            }
+        }
     }
 
 }

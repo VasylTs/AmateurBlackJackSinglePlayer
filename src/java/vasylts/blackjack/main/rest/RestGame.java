@@ -13,7 +13,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.StatusType;
 import vasylts.blackjack.game.IBlackjackGame;
 import vasylts.blackjack.main.GameFactory;
 import vasylts.blackjack.main.rest.error.BlackjackServerException;
@@ -25,7 +24,7 @@ import vasylts.blackjack.main.rest.error.BlackjackServerException;
 @Stateless
 @Path("game")
 public class RestGame {
-
+    
     /**
      * Method for creating new blackjack game
      *
@@ -56,6 +55,7 @@ public class RestGame {
                 return Response.ok(new Gson().toJson(game.getDealerCards())).build();
             }
         } catch (Exception e) {
+            e.printStackTrace();
             throw new BlackjackServerException(e.toString());
         }
     }
@@ -72,6 +72,7 @@ public class RestGame {
                 return Response.ok(new Gson().toJson(game.getDealerScore())).build();
             }
         } catch (Exception e) {
+            e.printStackTrace();
             throw new BlackjackServerException(e.toString());
         }
     }
@@ -94,6 +95,7 @@ public class RestGame {
                 return Response.ok(new Gson().toJson(game.getPlayersInGame())).build();
             }
         } catch (Exception e) {
+            e.printStackTrace();
             throw new BlackjackServerException(e.toString());
         }
     }
@@ -117,6 +119,7 @@ public class RestGame {
                 return Response.ok(new Gson().toJson(game.getState())).build();
             }
         } catch (Exception e) {
+            e.printStackTrace();
             throw new BlackjackServerException(e.toString());
         }
     }
@@ -137,6 +140,7 @@ public class RestGame {
             IBlackjackGame game = GameFactory.getGame(gameId);
             return Response.ok(g.toJson(game)).build();
         } catch (Exception e) {
+            e.printStackTrace();
             throw new BlackjackServerException(e.toString());
         }
     }
