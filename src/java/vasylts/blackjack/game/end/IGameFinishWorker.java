@@ -6,6 +6,7 @@
 package vasylts.blackjack.game.end;
 
 import java.util.Collection;
+import vasylts.blackjack.logger.IActionLogger;
 import vasylts.blackjack.player.hand.DealerHand;
 import vasylts.blackjack.player.IPlayer;
 
@@ -27,5 +28,5 @@ public interface IGameFinishWorker {
      * @param dealerHand 
      * @param players
      */
-    public void givePrizesToWinners(DealerHand dealerHand, Collection<IPlayer> players);
+    public void givePrizesToWinners(DealerHand dealerHand, Collection<IPlayer> players, IActionLogger logger);
 }

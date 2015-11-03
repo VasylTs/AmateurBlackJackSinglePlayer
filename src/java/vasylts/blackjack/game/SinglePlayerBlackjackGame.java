@@ -14,8 +14,9 @@ import vasylts.blackjack.game.end.GameFinishDealerBusted;
 import vasylts.blackjack.game.end.GameFinishWorker;
 import vasylts.blackjack.game.end.IGameFinishWorker;
 import vasylts.blackjack.jaxb.EnumGameState;
+import vasylts.blackjack.logger.EnumLogAction;
+import vasylts.blackjack.logger.IActionLogger;
 import vasylts.blackjack.player.hand.DealerHand;
-import vasylts.blackjack.player.hand.IHand;
 import vasylts.blackjack.player.IPlayer;
 import vasylts.blackjack.user.IUser;
 
@@ -29,7 +30,8 @@ public class SinglePlayerBlackjackGame implements IBlackjackGame {
     private final GamePlayerManager playerManager;
     private final IDeck gameDeck;
     private final boolean resetDeck;
-
+    
+    private  IActionLogger logger;
     private EnumGameState state;
     private DealerHand dealerHand;
 
@@ -70,21 +72,27 @@ public class SinglePlayerBlackjackGame implements IBlackjackGame {
      * Starts game with one player
      */
     private void startGame() {
-        checkState(EnumGameState.WAITING_BETS);
-        IPlayer player = getMySinglePlayer();
-        if (player != null && player.getBet() > 0) {
-            // let`s give cards to dealer
-            dealerHand = new DealerHand();
-            dealerHand.setHiddenCard(gameDeck.getNextCard());
-            dealerHand.addCard(gameDeck.getNextCard());
-            // and now let`s give cards to our player
-
-            IHand hand = player.getHand();
-            hand.addCard(gameDeck.getNextCard());
-            hand.addCard(gameDeck.getNextCard());
-
-            setState(EnumGameState.GAME_IN_PROCESS);
+        EnumLogAction logAction = EnumLogAction.GAME_START;
+        getLogger().logGameAction(true, logAction, "Trying to start game.");
+        try {
+            checkState(EnumGameState.WAITING_BETS);
+            IPlayer player = getMySinglePlayer();
+            if (player != null && player.getBet() > 0) {
+                // let`s give cards to dealer
+                dealerHand = new DealerHand();
+                setDealerHiddenCard(gameDeck.getNextCard());
+                getCardToDealer(gameDeck.getNextCard());
+                // and now let`s give cards to our player
+                setState(EnumGameState.GAME_IN_PROCESS);
+                getLogger().logGameAction(true, logAction, "Game started.");
+                hitPlayer(0, player.getId());
+                hitPlayer(0, player.getId());
+            }
+        } catch (Exception e) {
+            getLogger().logGameAction(false, logAction, e.toString());
+            throw e;
         }
+
     }
 
     /**
@@ -102,21 +110,55 @@ public class SinglePlayerBlackjackGame implements IBlackjackGame {
      * This method is called from: {@code  public void standPlayer();}
      */
     private void tryToEndGame() {
-        checkState(EnumGameState.GAME_IN_PROCESS);
-        // p.s. we have only one player so we don`t need to check if all players used action "STAND"
+        EnumLogAction logAction = EnumLogAction.GAME_END;
+        getLogger().logGameAction(true, logAction, "Trying to end game.");
+        try {
+            checkState(EnumGameState.GAME_IN_PROCESS);
+            // p.s. we have only one player so we don`t need to check if all players used action "STAND"
 
-        // Let`s end this game
-        setState(EnumGameState.GAME_FINISHED);
-        playForDealer();
-        IGameFinishWorker gameEndWorker;
-        if (dealerHand.isBlackjack()) {
-            gameEndWorker = new GameFinishDealerBlackjack();
-        } else if (dealerHand.isBusted()) {
-            gameEndWorker = new GameFinishDealerBusted();
-        } else {
-            gameEndWorker = new GameFinishWorker();
+            // Let`s end this game
+            setState(EnumGameState.GAME_FINISHED);
+            playForDealer();
+            IGameFinishWorker gameEndWorker;
+            if (dealerHand.isBlackjack()) {
+                getLogger().logGameAction(true, logAction, "Dealer has blackjack with hand: " + dealerHand.toString());
+                gameEndWorker = new GameFinishDealerBlackjack();
+            } else if (dealerHand.isBusted()) {
+                getLogger().logGameAction(true, logAction, "Dealer busted with hand: " + dealerHand.toString());
+                gameEndWorker = new GameFinishDealerBusted();
+            } else {
+                getLogger().logGameAction(true, logAction, "Dealer ended game with hand: " + dealerHand.toString());
+                gameEndWorker = new GameFinishWorker();
+            }
+
+            gameEndWorker.givePrizesToWinners(dealerHand, playerManager.getPlayers(), getLogger());
+            getLogger().logGameAction(true, logAction, "All winners received prizes.");
+            getLogger().logGameAction(true, logAction, "Game successfully ended.");
+        } catch (Exception e) {
+            getLogger().logGameAction(false, logAction, e.toString());
+            throw e;
         }
-        gameEndWorker.givePrizesToWinners(dealerHand, playerManager.getPlayers());
+    }
+
+    /**
+     * Set dealers hidden card. This method should be called only once after new
+     * game started
+     * <p>
+     * @param card new card
+     */
+    private void setDealerHiddenCard(ICard card) {
+        dealerHand.setHiddenCard(card);
+        getLogger().logGameAction(true, EnumLogAction.GAME_DEALER, "Received hidden card: " + card.toString());
+    }
+
+    /**
+     * Gives new card to dealer hand.
+     * <p>
+     * @param card
+     */
+    private void getCardToDealer(ICard card) {
+        getLogger().logGameAction(true, EnumLogAction.GAME_DEALER, "Received card: " + card.toString());
+        dealerHand.addCard(card);
     }
 
     /**
@@ -128,7 +170,7 @@ public class SinglePlayerBlackjackGame implements IBlackjackGame {
         checkState(EnumGameState.GAME_FINISHED);
         dealerHand.openHiddenCard();
         while (dealerHand.getScore() < DealerHand.dealerPlayScore) {
-            dealerHand.addCard(gameDeck.getNextCard());
+            getCardToDealer(gameDeck.getNextCard());
         }
         dealerHand.setStand();
     }
@@ -138,18 +180,26 @@ public class SinglePlayerBlackjackGame implements IBlackjackGame {
      * Deck if such flag is true
      */
     private void resetAll() {
-        checkState(EnumGameState.GAME_FINISHED);
-        if (getMySinglePlayer() != null) {
-            // reset our single player hand(card|bet|flags)
-            getMySinglePlayer().resetGame();
-            // reset dealer hand
-            dealerHand = null;
-            // reset deck
-            if (resetDeck) {
-                gameDeck.resetDeck();
-                gameDeck.shuffleDeck();
+        EnumLogAction logAction = EnumLogAction.GAME_RESET;
+        getLogger().logGameAction(true, logAction, "Trying to reset game.");
+        try {
+            checkState(EnumGameState.GAME_FINISHED);
+            if (getMySinglePlayer() != null) {
+                // reset our single player hand(card|bet|flags)
+                getMySinglePlayer().resetGame();
+                // reset dealer hand
+                dealerHand = null;
+                // reset deck
+                if (resetDeck) {
+                    gameDeck.resetDeck();
+                    gameDeck.shuffleDeck();
+                }
+                setState(EnumGameState.WAITING_BETS);
+                getLogger().logGameAction(true, logAction, "Game successfully reseted!");
             }
-            setState(EnumGameState.WAITING_BETS);
+        } catch (Exception e) {
+            getLogger().logGameAction(false, logAction, e.toString());
+            throw e;
         }
 
     }
@@ -178,7 +228,31 @@ public class SinglePlayerBlackjackGame implements IBlackjackGame {
      * @param state the state to set
      */
     private void setState(EnumGameState state) {
-        this.state = state;
+        if (this.state != state) {
+            getLogger().logGameAction(true, EnumLogAction.GAME_STATE, "Changing game state from " + this.state.toString() + " to " + state.toString());
+            this.state = state;
+        }
+    }
+    
+    /**
+     * 
+     * @param logger 
+     */
+    public void setLogger(IActionLogger logger) {
+        if (logger != null) {
+            this.logger = logger;
+        }
+    }
+    
+    /**
+     * @return the logger
+     */
+    public IActionLogger getLogger() {
+        if (logger == null) {
+            // Please call setLogger() before calling any other methods!
+            throw new NullPointerException("Logger is not initialized!");
+        }
+        return logger;
     }
 
     //-------------------------------------------------------------------------
@@ -199,8 +273,22 @@ public class SinglePlayerBlackjackGame implements IBlackjackGame {
      */
     @Override
     public boolean placeBet(long userId, long playerId, Double bet) {
-        checkState(EnumGameState.WAITING_BETS);
-        return playerManager.placeBetUnauthorized(playerId, bet);
+        EnumLogAction action = EnumLogAction.PLAYER_BET;
+        getLogger().logPlayerAction(true, playerId, action, "Trying to set a bet for player with value: " + bet);
+        try {
+            checkState(EnumGameState.WAITING_BETS);
+            boolean isSetted = playerManager.placeBetUnauthorized(playerId, bet);
+            if (isSetted) {
+                getLogger().logPlayerAction(true, playerId, action, "Bet successfully setted!");
+            } else {
+                getLogger().logPlayerAction(false, playerId, action, "Bet did not set! Perhaps there are no money in players wallet.");
+            }
+            return isSetted;
+
+        } catch (Exception e) {
+            getLogger().logPlayerAction(false, playerId, action, e.toString());
+            throw e;
+        }
     }
 
     /**
@@ -214,18 +302,28 @@ public class SinglePlayerBlackjackGame implements IBlackjackGame {
      */
     @Override
     public ICard hitPlayer(long userId, long playerId) {
-        checkState(EnumGameState.GAME_IN_PROCESS);
-        if (isPlayerCanTakeCard(playerId)) {
-            ICard card = gameDeck.getNextCard();
-            playerManager.giveCardUnauthorized(playerId, card);
-            if (playerManager.isPlayerBusted(playerId)) {
-                standPlayer(userId, playerId);
+        EnumLogAction action = EnumLogAction.PLAYER_HIT;
+        getLogger().logPlayerAction(true, playerId, action, "Trying to get a card for player.");
+        try {
+            checkState(EnumGameState.GAME_IN_PROCESS);
+            if (isPlayerCanTakeCard(playerId)) {
+                ICard card = gameDeck.getNextCard();
+                playerManager.giveCardUnauthorized(playerId, card);
+                getLogger().logPlayerAction(true, playerId, action, "Player received card: " + card.toString());
+                if (playerManager.isPlayerBusted(playerId)) {
+                    standPlayer(userId, playerId);
+                }
+                // card already added to players hand
+                // returning this card just for info
+               
+                return card;
+            } else {
+                getLogger().logPlayerAction(false, playerId, action, "Player can not take card now.");
+                return null;
             }
-            // card already added to players hand
-            // returning this card just for info
-            return card;
-        } else {
-            return null;
+        } catch (Exception e) {
+            getLogger().logPlayerAction(false, playerId, action, e.toString());
+            throw e;
         }
     }
 
@@ -239,9 +337,14 @@ public class SinglePlayerBlackjackGame implements IBlackjackGame {
      */
     @Override
     public void standPlayer(long userId, long playerId) {
+        EnumLogAction action = EnumLogAction.PLAYER_STAND;
+        getLogger().logPlayerAction(true, playerId, action, "Trying to use 'STAND' to player.");
         if (state == EnumGameState.GAME_IN_PROCESS) {
             playerManager.standPlayerUnauthorized(playerId);
+            getLogger().logPlayerAction(true, playerId, action, "Action 'STAND' used to player.");
             tryToEndGame();
+        } else {
+            getLogger().logPlayerAction(false, playerId, action, "Can not use 'STAND' to player, game in wrong state.");
         }
     }
 
@@ -253,8 +356,16 @@ public class SinglePlayerBlackjackGame implements IBlackjackGame {
      */
     @Override
     public void readyPlayerToStart(long playerId) {
-        checkState(EnumGameState.WAITING_BETS);
-        playerManager.getPlayer(playerId).setReadyToStart();
+        EnumLogAction action = EnumLogAction.PLAYER_READY_START;
+        try {
+            checkState(EnumGameState.WAITING_BETS);
+            playerManager.getPlayer(playerId).setReadyToStart();
+            getLogger().logPlayerAction(true, playerId, action, "Player setted as ready to start");
+        } catch (Exception e) {
+            getLogger().logPlayerAction(false, playerId, action, e.toString());
+            throw e;
+        }
+
         if (playerManager.isAllPlayerReadyToStart()) {
             startGame();
         }
@@ -268,8 +379,15 @@ public class SinglePlayerBlackjackGame implements IBlackjackGame {
      */
     @Override
     public void readyPlayerToEnd(long playerId) {
-        checkState(EnumGameState.GAME_FINISHED);
-        playerManager.getPlayer(playerId).setReadyToFinish();
+        EnumLogAction action = EnumLogAction.PLAYER_READY_END;
+        try {
+            checkState(EnumGameState.GAME_FINISHED);
+            playerManager.getPlayer(playerId).setReadyToFinish();
+            getLogger().logPlayerAction(true, playerId, action, "Player setted as ready to end");
+        } catch (Exception e) {
+            getLogger().logPlayerAction(false, playerId, action, e.toString());
+            throw e;
+        }
 
         if (playerManager.isAllPlayerReadyToEnd()) {
             resetAll();
@@ -298,7 +416,9 @@ public class SinglePlayerBlackjackGame implements IBlackjackGame {
             throw new NullPointerException("User can not be null");
         }
         if (getMySinglePlayer() == null) {
-            return playerManager.addUserToGame(user);
+            long playerId = playerManager.addUserToGame(user);
+            logger.logGameAction(true, EnumLogAction.GAME_STATE, "Added player to game with id: " + playerId + ". User id: " + user.getId());
+            return playerId;
         } else {
             throw new IllegalStateException("This game already have player");
         }
@@ -317,6 +437,7 @@ public class SinglePlayerBlackjackGame implements IBlackjackGame {
      */
     @Override
     public boolean deletePlayerByUser(long userId, long playerId) {
+        logger.logGameAction(true, EnumLogAction.GAME_STATE, "Delete player from game with id: " + playerId + ". User id: " + userId);
         return playerManager.deletePlayerUnauthorized(playerId);
     }
 

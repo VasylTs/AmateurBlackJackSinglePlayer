@@ -17,9 +17,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import vasylts.blackjack.jaxb.EntityUser;
+import vasylts.blackjack.main.SpecialFactory;
 import vasylts.blackjack.main.rest.error.BlackjackServerException;
 import vasylts.blackjack.user.IUser;
-import vasylts.blackjack.user.UserFactory;
 
 /**
  *
@@ -44,7 +44,7 @@ public class RestUser {
     @Consumes({MediaType.APPLICATION_JSON})
     public Response createUser(EntityUser user) {
         try {
-            Long isUserCreated = UserFactory.getStandartUserManager().createUser(user.getLogin(), user.getPassword());
+            Long isUserCreated = SpecialFactory.getStandartUserManager().createUser(user.getLogin(), user.getPassword());
             if (isUserCreated != null) {
                 return Response.ok().build();
             } else {
@@ -70,7 +70,7 @@ public class RestUser {
     @Produces({MediaType.APPLICATION_JSON})
     public Response getUserById(@PathParam("id") Long id) {
         try {
-            IUser user = UserFactory.getStandartUserManager().getUser(id);
+            IUser user = SpecialFactory.getStandartUserManager().getUser(id);
             if (user == null) {
                 return Response.status(Response.Status.NOT_FOUND).build();
             } else {
@@ -100,7 +100,7 @@ public class RestUser {
     @Produces({MediaType.APPLICATION_JSON})
     public Response getUserByLogPass(@PathParam("login") String login, @PathParam("password") String password) {
         try {
-            IUser user = UserFactory.getStandartUserManager().getUser(login, password);
+            IUser user = SpecialFactory.getStandartUserManager().getUser(login, password);
             if (user == null) {
                 return Response.status(Response.Status.NOT_FOUND).build();
             } else {
@@ -125,7 +125,7 @@ public class RestUser {
     @DELETE
     @Path("{login}/{password}")
     public void deleteUserByLogPass(@PathParam("login") String login, @PathParam("password") String password) {
-        UserFactory.getStandartUserManager().deleteUser(login, password);
+        SpecialFactory.getStandartUserManager().deleteUser(login, password);
     }
 
     /**
@@ -135,7 +135,7 @@ public class RestUser {
     @DELETE
     @Path("{id}")
     public void deleteUserById(@PathParam("id") Long id) {
-        UserFactory.getStandartUserManager().deleteUser(id);
+        SpecialFactory.getStandartUserManager().deleteUser(id);
     }
 
 }

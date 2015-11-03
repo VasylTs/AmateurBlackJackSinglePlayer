@@ -7,6 +7,8 @@ package vasylts.blackjack.game.end;
 
 import java.util.Collection;
 import java.util.Map;
+import vasylts.blackjack.logger.EnumLogAction;
+import vasylts.blackjack.logger.IActionLogger;
 import vasylts.blackjack.player.hand.DealerHand;
 import vasylts.blackjack.player.IPlayer;
 
@@ -20,11 +22,14 @@ import vasylts.blackjack.player.IPlayer;
  */
 public class GameFinishWorker implements IGameFinishWorker {
 
+    private IActionLogger logger;
+    
     @Override
-    public void givePrizesToWinners(DealerHand dealerHand, Collection<IPlayer> players) {
+    public void givePrizesToWinners(DealerHand dealerHand, Collection<IPlayer> players, IActionLogger logger) {
         if (!dealerHand.isStand()) {
             throw new IllegalStateException("Can not give prize to winner before dealer called action \"STAND\"");
         }
+        this.logger = logger;
         int dealerScore = dealerHand.getScore();
         players.stream().forEach((pl) -> {
             if (pl.getHand().getScore() > dealerScore || pl.getHand().isBlackjack()) {
@@ -41,13 +46,16 @@ public class GameFinishWorker implements IGameFinishWorker {
         double bet = player.getBet();
         double prize = (player.getHand().isBlackjack() ? bet * 1.5 : bet) + bet;
         player.getWallet().addFunds(prize);
+        logger.logPlayerAction(true, player.getId(), EnumLogAction.USER_FUNDS, "Giving prize: " + prize + " to player: " + player.getId() + ". User id: " + player.getUserId());
     }
 
     private void givePrizePlayerDraw(IPlayer player) {
         player.getWallet().addFunds(player.getBet());
+        logger.logPlayerAction(true, player.getId(), EnumLogAction.USER_FUNDS, "Returning bet: " + player.getBet() + " to player: " + player.getId() + ". User id: " + player.getUserId());
     }
 
     private void givePrizePlayerLose(IPlayer player) {
         // we already received our money he he he
+        logger.logPlayerAction(true, player.getId(), EnumLogAction.USER_FUNDS, "Taking bet from table(no changing to player`s balance): " + player.getBet() + " to player: " + player.getId() + ". User id: " + player.getUserId());
     }
 }

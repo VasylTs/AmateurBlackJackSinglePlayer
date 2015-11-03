@@ -16,6 +16,8 @@ import vasylts.blackjack.deck.DeckBuilder;
 import vasylts.blackjack.deck.IDeck;
 import vasylts.blackjack.game.IBlackjackGame;
 import vasylts.blackjack.game.SinglePlayerBlackjackGame;
+import vasylts.blackjack.logger.EnumLogAction;
+import vasylts.blackjack.logger.IActionLogger;
 
 /**
  *
@@ -87,7 +89,12 @@ public class GameFactory {
      */
     public static Long createGame(IDeck deck, boolean autoResetDeck) {
         SinglePlayerBlackjackGame game = new SinglePlayerBlackjackGame(deck, autoResetDeck);
-        return setGame(game);
+        long gameId = setGame(game); 
+        IActionLogger gameLogger = SpecialFactory.getNewActionLogger();
+        gameLogger.setGameId(id);
+        game.setLogger(gameLogger);
+        game.getLogger().logGameAction(true, EnumLogAction.GAME_CREATE, null);
+        return gameId;
     }
 
     /**

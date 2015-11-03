@@ -12,6 +12,8 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
 import java.util.function.Predicate;
+import vasylts.blackjack.logger.FakeWalletLogger;
+import vasylts.blackjack.main.SpecialFactory;
 import vasylts.blackjack.user.wallet.FakeWallet;
 import vasylts.blackjack.user.wallet.IWallet;
 
@@ -40,6 +42,7 @@ public class FakeUserManager implements IUserManager {
     public Long createUser(String login, String password) {
         Random rand = new Random();
         IUser user = new FakeUser(rand.nextLong(), login, password, new FakeWallet());
+        user.getWallet().setWalletLogger(SpecialFactory.getNewWalletLogger());
         return addUser(user);
     }
     
