@@ -5,6 +5,8 @@
  */
 package vasylts.blackjack.user.wallet;
 
+import vasylts.blackjack.logger.IWalletLogger;
+
 /**
  * This interface describes standard methods wich should have instance of user
  * wallet
@@ -13,6 +15,9 @@ package vasylts.blackjack.user.wallet;
  */
 public interface IWallet {
 
+    public IWalletLogger getWalletLogger();
+    public void setWalletLogger(IWalletLogger logger);
+    
     /**
      * Returns current balance in this wallet
      *

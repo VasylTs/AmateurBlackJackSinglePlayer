@@ -59,6 +59,9 @@ public class SimpleCard implements ICard {
         return cardValue;
     }
 
-
+    @Override 
+    public String toString() {
+        return "{rank: " + cardValue.toString() + ", suit: " + cardSuit.toString() + "}";
+    }
 
 }

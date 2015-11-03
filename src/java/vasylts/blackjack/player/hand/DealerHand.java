@@ -21,12 +21,12 @@ public class DealerHand implements IHand {
     private final List<ICard> notHiddenCards;
     private ICard hiddenCard;
     private boolean stand;
-    
+
     public DealerHand() {
         notHiddenCards = new ArrayList<>();
         stand = false;
     }
-    
+
     public void setHiddenCard(ICard card) {
         if (hiddenCard == null && notHiddenCards.isEmpty()) {
             hiddenCard = card;
@@ -34,17 +34,16 @@ public class DealerHand implements IHand {
             throw new IllegalStateException("You can`t set hidden card when dealer already have not hidden cards or another hidden card.");
         }
     }
-    
+
     public void openHiddenCard() {
-        addCard(hiddenCard);       
+        addCard(hiddenCard);
         hiddenCard = null;
     }
-    
-    
+
     @Override
     public void addCard(ICard card) {
         if (card != null) {
-            notHiddenCards.add(card); 
+            notHiddenCards.add(card);
         }
     }
 
@@ -80,7 +79,7 @@ public class DealerHand implements IHand {
 
         return score;
     }
-    
+
     @Override
     public boolean isStand() {
         return stand;
@@ -90,5 +89,15 @@ public class DealerHand implements IHand {
     public void setStand() {
         stand = true;
     }
-}
 
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("[busted:").append(isBusted()).append(", score:").append(getScore()).append(", ");
+        for (ICard card : notHiddenCards) {
+            sb.append(card.toString());
+        }
+        sb.append("]");
+        return sb.toString();
+    }
+}

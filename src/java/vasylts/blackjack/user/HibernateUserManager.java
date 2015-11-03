@@ -11,6 +11,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.exception.ConstraintViolationException;
+import vasylts.blackjack.main.SpecialFactory;
 import vasylts.blackjack.user.databaseworker.hibernateworker.BlackjackHibernateUtil;
 import vasylts.blackjack.user.databaseworker.hibernateworker.Blackjackuser;
 import vasylts.blackjack.user.wallet.HibernateWallet;
@@ -30,6 +31,7 @@ public class HibernateUserManager implements IUserManager {
             user.setLogin(login);
             user.setPassword(password);
             HibernateWallet wallet = HibernateWallet.createNewWallet();
+            wallet.setWalletLogger(SpecialFactory.getNewWalletLogger());
             user.setWalletid(wallet.getWalletId());
             session = BlackjackHibernateUtil.getSessionFactory().openSession();
             tr = session.beginTransaction();

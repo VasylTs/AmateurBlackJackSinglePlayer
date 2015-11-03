@@ -12,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.NoSuchElementException;
+import vasylts.blackjack.main.SpecialFactory;
 import vasylts.blackjack.user.JdbcUser;
 import vasylts.blackjack.user.wallet.JdbcWallet;
 
@@ -67,6 +68,7 @@ public class DatabaseWorkerUserJdbc {
             if (rs.next()) {
                 walletId = rs.getLong(4);
                 JdbcWallet wallet = new JdbcWallet(walletId);
+                wallet.setWalletLogger(SpecialFactory.getNewWalletLogger());
                 JdbcUser user = new JdbcUser(rs.getLong(1), rs.getString(2), rs.getString(3), wallet);
                 return user;
             } else {
@@ -100,6 +102,7 @@ public class DatabaseWorkerUserJdbc {
             if (rs.next()) {
                 walletId = rs.getLong(4);
                 JdbcWallet wallet = new JdbcWallet(walletId);
+                wallet.setWalletLogger(SpecialFactory.getNewWalletLogger());
                 JdbcUser user = new JdbcUser(rs.getLong(1), rs.getString(2), rs.getString(3), wallet);
                 return user;
             } else {

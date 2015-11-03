@@ -8,6 +8,7 @@ package vasylts.blackjack.user.wallet;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import vasylts.blackjack.logger.IWalletLogger;
 import vasylts.blackjack.user.databaseworker.hibernateworker.BlackjackHibernateUtil;
 import vasylts.blackjack.user.databaseworker.hibernateworker.Userwallet;
 
@@ -18,6 +19,7 @@ import vasylts.blackjack.user.databaseworker.hibernateworker.Userwallet;
  */
 public class HibernateWallet implements IWallet {
 
+    private IWalletLogger logger;
     private final long walletId;
 
     /**
@@ -73,10 +75,12 @@ public class HibernateWallet implements IWallet {
             tr = session.beginTransaction();
             Userwallet wallet = (Userwallet) session.load(Userwallet.class, walletId);
 
-            double newBalance = wallet.getBalance() - Math.abs(amount);
+            double change = Math.abs(amount);
+            double newBalance = wallet.getBalance() - change;
             wallet.setBalance(newBalance);
             session.save(wallet);
             tr.commit();
+            getWalletLogger().logChangingBalance(walletId, change, "Taking money from wallet.");
             return newBalance;
         } finally {
             if (tr != null && tr.isActive()) {
@@ -105,10 +109,12 @@ public class HibernateWallet implements IWallet {
             session = BlackjackHibernateUtil.getSessionFactory().getCurrentSession();
             tr = session.beginTransaction();
             Userwallet wallet = (Userwallet) session.load(Userwallet.class, walletId);
-            double newBalance = wallet.getBalance() + Math.abs(amount);
+            double change = Math.abs(amount);
+            double newBalance = wallet.getBalance() + change;
             wallet.setBalance(newBalance);
             session.save(wallet);
             tr.commit();
+            getWalletLogger().logChangingBalance(walletId, change, "Adding money to wallet.");
             return newBalance;
         } finally {
             if (tr != null && tr.isActive()) {
@@ -154,6 +160,19 @@ public class HibernateWallet implements IWallet {
      */
     public long getWalletId() {
         return walletId;
+    }
+
+    @Override
+    public IWalletLogger getWalletLogger() {
+        if (logger == null) {
+            throw new NullPointerException("Wallet logger is not initialized!");
+        }
+        return logger;
+    }
+
+    @Override
+    public void setWalletLogger(IWalletLogger logger) {
+        this.logger = logger;
     }
 
 }

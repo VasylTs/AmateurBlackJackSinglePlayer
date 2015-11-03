@@ -75,4 +75,15 @@ public class PlayerHand implements IHand {
     public void setStand() {
         stand = true;
     }    
+    
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("[busted:").append(isBusted()).append(", score:").append(getScore()).append(", ");
+        for (ICard card : cards) {
+            sb.append(card.toString());
+        }
+        sb.append("]");
+        return sb.toString();
+    }
 }

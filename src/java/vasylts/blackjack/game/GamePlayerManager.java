@@ -225,7 +225,7 @@ public class GamePlayerManager {
         if (player.getBet() > 0) {
             returnBetToPlayer(player);
         }
-        if (bet > 0 && isEnoughMoneyInWallet(player.getWallet(), bet)) {
+        if (bet > 0 && isEnoughMoneyInWallet(player.getWallet(), bet) && !player.isReadyToStart()) {
             player.getWallet().withdrawMoney(bet);
             player.setBet(bet);
             return true;

@@ -18,9 +18,9 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import vasylts.blackjack.main.GameFactory;
+import vasylts.blackjack.main.SpecialFactory;
 import vasylts.blackjack.main.rest.error.BlackjackServerException;
 import vasylts.blackjack.user.IUser;
-import vasylts.blackjack.user.UserFactory;
 
 /**
  * REST Web Service
@@ -53,7 +53,7 @@ public class RestPlayer {
     @Produces({MediaType.TEXT_PLAIN})
     public Response getNewPlayerId(@PathParam("gameId") Long gameId, @PathParam("userId") Long userId) {
         try {
-            IUser user = UserFactory.getStandartUserManager().getUser(userId);
+            IUser user = SpecialFactory.getStandartUserManager().getUser(userId);
             Long playerId = GameFactory.getGame(gameId).addUserToGame(user);
             return Response.ok(playerId.toString()).build();
         } catch (Exception e) {

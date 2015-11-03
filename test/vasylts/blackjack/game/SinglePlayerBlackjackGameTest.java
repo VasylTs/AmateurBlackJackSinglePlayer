@@ -19,6 +19,7 @@ import vasylts.blackjack.deck.card.EnumCardSuit;
 import vasylts.blackjack.deck.card.EnumCardValue;
 import vasylts.blackjack.deck.card.ICard;
 import vasylts.blackjack.jaxb.EnumGameState;
+import vasylts.blackjack.logger.NullLogger;
 import vasylts.blackjack.player.NoSuchPlayerException;
 import vasylts.blackjack.user.wallet.FakeWallet;
 import vasylts.blackjack.user.IUser;
@@ -42,6 +43,7 @@ public class SinglePlayerBlackjackGameTest {
     @Before
     public void setUp() {
         standartGame = new SinglePlayerBlackjackGame(DeckBuilder.buildStandartDeck(), true);
+        standartGame.setLogger(new NullLogger());
         userTaras = new FakeUser(1l, "taras", "1", new FakeWallet());
         playerTarasId = standartGame.addUserToGame(userTaras);    
     }
@@ -292,6 +294,7 @@ public class SinglePlayerBlackjackGameTest {
         StandartDeck deck = new StandartDeck(cards);
         
         SinglePlayerBlackjackGame game = new SinglePlayerBlackjackGame(deck, true);
+        game.setLogger(new NullLogger());
         
         int CARD_TEN = 10;
         IUser userLena = new FakeUser(1l, "lena", "1", new FakeWallet());
@@ -333,7 +336,7 @@ public class SinglePlayerBlackjackGameTest {
         cards.add(CardFactory.getCard(EnumCardSuit.CLUBS, EnumCardValue.FOUR));
                 
         SinglePlayerBlackjackGame game = new SinglePlayerBlackjackGame(new StandartDeck(cards), true);
-        
+        game.setLogger(new NullLogger());
         IUser userLena = new FakeUser(1l, "lena", "1", new FakeWallet());
         double oldMoneyLena = userLena.getWallet().getBalance();
         double bet = 45;
@@ -361,6 +364,7 @@ public class SinglePlayerBlackjackGameTest {
         List<ICard> cards = new ArrayList<>();
                
         SinglePlayerBlackjackGame game = new SinglePlayerBlackjackGame(new StandartDeck(cards), true);
+        game.setLogger(new NullLogger());
         IUser userLena = new FakeUser(1l, "lena", "1", new FakeWallet());
         long playerLenaId = game.addUserToGame(userLena);
         
@@ -373,6 +377,7 @@ public class SinglePlayerBlackjackGameTest {
         List<ICard> cards = new ArrayList<>();
                
         SinglePlayerBlackjackGame game = new SinglePlayerBlackjackGame(new StandartDeck(cards), true);
+        game.setLogger(new NullLogger());
         IUser userLena = new FakeUser(1l, "lena", "1", new FakeWallet());
         long playerLenaId = game.addUserToGame(userLena);
         
@@ -386,6 +391,7 @@ public class SinglePlayerBlackjackGameTest {
     public void testTwoGamesInARow() {      
         double lenaBet = 100.00;
         SinglePlayerBlackjackGame game = new SinglePlayerBlackjackGame(DeckBuilder.buildStandartDeck(), true);
+        game.setLogger(new NullLogger());
         IUser userLena = new FakeUser(1l, "lena", "1", new FakeWallet());
         long playerLenaId = game.addUserToGame(userLena);
         
