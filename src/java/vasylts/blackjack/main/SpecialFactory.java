@@ -29,7 +29,7 @@ public class SpecialFactory {
         HIBERNATE;
     }
 
-    private static DatabaseWorker dbWorkerType = DatabaseWorker.JDBC;
+    private static DatabaseWorker dbWorkerType = DatabaseWorker.FAKE;
     private static IUserManager userManager = null;
 
     public static IUserManager getStandartUserManager() {
